@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Autore {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private UUID autoreId;
 
     @Column(nullable = false)
