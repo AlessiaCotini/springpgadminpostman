@@ -22,7 +22,7 @@ public class PostController {
 
 
     //GET - http://localhost:3027/blogPost
-    //SERVE PER LE PAGINE 
+    //SERVE PER LE PAGINE
     @GetMapping
     public Page<Post> getAll(@RequestParam("0") int page){
         return this.postService.findAll(page);

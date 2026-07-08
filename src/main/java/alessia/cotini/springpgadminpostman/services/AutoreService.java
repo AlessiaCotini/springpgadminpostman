@@ -2,6 +2,7 @@ package alessia.cotini.springpgadminpostman.services;
 
 import alessia.cotini.springpgadminpostman.entities.Autore;
 
+import alessia.cotini.springpgadminpostman.exceptions.NotFound;
 import alessia.cotini.springpgadminpostman.payloads.NewAutorePayload;
 import alessia.cotini.springpgadminpostman.repositories.AutoreRepository;
 //import giusti ricordare !!!!!!
@@ -26,7 +27,7 @@ public class AutoreService {
     }
 
     public Autore findById (UUID authorId) {
-        return autoreRepository.findById(authorId).orElse(null);
+        return autoreRepository.findById(authorId).orElseThrow(()-> new NotFound("L'autore con id "+ authorId+ " non è stato trovato."));
     }
 
     public Autore createAuthor(NewAutorePayload payloads){
@@ -36,7 +37,7 @@ public class AutoreService {
     }
 
     public Autore modifyAuthor(@PathVariable UUID authorId, NewAutorePayload payloads){
-        Autore trovato = autoreRepository.findById(authorId).orElse(null);
+        Autore trovato = autoreRepository.findById(authorId).orElseThrow(()-> new NotFound("L'autore con id "+ authorId+ " non è stato trovato."));
         assert trovato != null;
         trovato.setName(payloads.getName());
         trovato.setSurname(payloads.getSurname());
@@ -46,7 +47,7 @@ public class AutoreService {
     }
 
     public void deleteAuthor (@PathVariable UUID authorId){
-        Autore trovato = autoreRepository.findById(authorId).orElse(null);
+        Autore trovato = autoreRepository.findById(authorId).orElseThrow(()-> new NotFound("L'autore con id "+ authorId+ " non è stato trovato."));
         assert trovato != null;
         autoreRepository.delete(trovato);
     }
