@@ -4,6 +4,7 @@ package alessia.cotini.springpgadminpostman.controllers;
 import alessia.cotini.springpgadminpostman.entities.Post;
 import alessia.cotini.springpgadminpostman.payloads.NewPostPayload;
 import alessia.cotini.springpgadminpostman.services.PostService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +22,12 @@ public class PostController {
 
 
     //GET - http://localhost:3027/blogPost
+    //SERVE PER LE PAGINE 
     @GetMapping
-    public List<Post> findAll(){
-        return this.postService.findAll();
+    public Page<Post> getAll(@RequestParam("0") int page){
+        return this.postService.findAll(page);
     }
+
 
     //GET - http://localhost:3027/blogPost/{postId}
     @GetMapping("/{postId}")
@@ -33,6 +36,7 @@ public class PostController {
     }
     //POST - http://localhost:3027/blogPost + payload
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void createPost(@RequestBody NewPostPayload payload){
        this.postService.save(payload);
     }

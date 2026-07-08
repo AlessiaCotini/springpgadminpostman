@@ -2,8 +2,10 @@ package alessia.cotini.springpgadminpostman.controllers;
 
 
 import alessia.cotini.springpgadminpostman.entities.Autore;
+import alessia.cotini.springpgadminpostman.entities.Post;
 import alessia.cotini.springpgadminpostman.payloads.NewAutorePayload;
 import alessia.cotini.springpgadminpostman.services.AutoreService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +22,10 @@ public class AutoreController {
     }
 
     //GET - http://localhost:3027/blogAuthors
+
     @GetMapping
-    public List<Autore> findAll(){
-        return this.autoreService.findAll();
+    public Page<Autore> getAll(@RequestParam("0") int page){
+        return this.autoreService.findAll(page);
     }
     //GET - http://localhost:3027/blogAuthors/{authorId}
     @GetMapping("/{authorId}")
@@ -31,6 +34,7 @@ public class AutoreController {
     }
     //POST - http://localhost:3027/blogAuthors + payload
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Autore createAuthor(@RequestBody NewAutorePayload payloads){
         return this.autoreService.createAuthor(payloads);
     }

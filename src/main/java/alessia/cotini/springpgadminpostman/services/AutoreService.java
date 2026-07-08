@@ -1,12 +1,16 @@
 package alessia.cotini.springpgadminpostman.services;
 
 import alessia.cotini.springpgadminpostman.entities.Autore;
+
 import alessia.cotini.springpgadminpostman.payloads.NewAutorePayload;
 import alessia.cotini.springpgadminpostman.repositories.AutoreRepository;
+//import giusti ricordare !!!!!!
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -16,8 +20,9 @@ public class AutoreService {
     public AutoreService(AutoreRepository autoreRepository) {
         this.autoreRepository = autoreRepository;
     }
-    public List<Autore> findAll(){
-        return this.autoreRepository.findAll();
+    public Page<Autore> findAll(int page){
+        Pageable pageable = PageRequest.of(page,10);
+        return this.autoreRepository.findAll(pageable);
     }
 
     public Autore findById (UUID authorId) {
@@ -32,6 +37,7 @@ public class AutoreService {
 
     public Autore modifyAuthor(@PathVariable UUID authorId, NewAutorePayload payloads){
         Autore trovato = autoreRepository.findById(authorId).orElse(null);
+        assert trovato != null;
         trovato.setName(payloads.getName());
         trovato.setSurname(payloads.getSurname());
         trovato.setEmail(payloads.getEmail());
@@ -41,6 +47,7 @@ public class AutoreService {
 
     public void deleteAuthor (@PathVariable UUID authorId){
         Autore trovato = autoreRepository.findById(authorId).orElse(null);
+        assert trovato != null;
         autoreRepository.delete(trovato);
     }
 }

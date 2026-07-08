@@ -5,12 +5,14 @@ import alessia.cotini.springpgadminpostman.entities.Post;
 import alessia.cotini.springpgadminpostman.payloads.NewPostPayload;
 import alessia.cotini.springpgadminpostman.repositories.AutoreRepository;
 import alessia.cotini.springpgadminpostman.repositories.PostRepository;
-import org.springframework.data.crossstore.ChangeSetPersister;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,8 +24,9 @@ public class PostService {
         this.postRepository = postRepository;
         this.autoreRepository = autoreRepository;
     }
-    public List<Post> findAll(){
-        return this.postRepository.findAll();
+    public Page<Post> findAll(int page){
+        Pageable pageable = PageRequest.of(page,10);
+        return this.postRepository.findAll(pageable);
     }
 
     public Post findById (UUID postId){
