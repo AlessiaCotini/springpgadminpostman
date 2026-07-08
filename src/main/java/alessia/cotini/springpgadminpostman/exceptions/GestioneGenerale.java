@@ -21,4 +21,12 @@ public class GestioneGenerale {
     public GestioneErrore conflict(Conflict ex){
         return new GestioneErrore(ex.getMessage(), LocalDateTime.now());
     }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public GestioneErrore exGenerale(Exception ex){
+        //GIUSTO PER LA RIGA DELL'ERRORE
+        ex.printStackTrace();
+        return new GestioneErrore("SERVER ERROR", LocalDateTime.now());
+    }
 }
