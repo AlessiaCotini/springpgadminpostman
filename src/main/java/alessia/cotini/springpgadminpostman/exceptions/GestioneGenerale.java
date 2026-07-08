@@ -15,4 +15,10 @@ public class GestioneGenerale {
     public GestioneErrore notFound(NotFound ex){
         return new GestioneErrore(ex.getMessage(), LocalDateTime.now());
     }
+
+    @ExceptionHandler(Conflict.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public GestioneErrore conflict(Conflict ex){
+        return new GestioneErrore(ex.getMessage(), LocalDateTime.now());
+    }
 }
