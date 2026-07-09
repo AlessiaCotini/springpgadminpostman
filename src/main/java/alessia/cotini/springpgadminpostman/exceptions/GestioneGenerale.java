@@ -10,8 +10,14 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GestioneGenerale {
 
-    @ExceptionHandler(NotFound.class)
+    @ExceptionHandler(BadRequest.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public GestioneErrore badRequest(BadRequest ex){
+        return new GestioneErrore(ex.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(NotFound.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public GestioneErrore notFound(NotFound ex){
         return new GestioneErrore(ex.getMessage(), LocalDateTime.now());
     }
@@ -24,8 +30,7 @@ public class GestioneGenerale {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public GestioneErrore exGenerale(Exception ex){
-        //GIUSTO PER LA RIGA DELL'ERRORE
+    public GestioneErrore errGenerale(Exception ex){
         ex.printStackTrace();
         return new GestioneErrore("SERVER ERROR", LocalDateTime.now());
     }
