@@ -3,20 +3,25 @@ package alessia.cotini.springpgadminpostman.controllers;
 
 import alessia.cotini.springpgadminpostman.entities.Autore;
 import alessia.cotini.springpgadminpostman.exceptions.BadRequest;
-import alessia.cotini.springpgadminpostman.exceptions.Conflict;
+import alessia.cotini.springpgadminpostman.exceptions.NotFound;
 import alessia.cotini.springpgadminpostman.records.NewAutoreRecord;
 import alessia.cotini.springpgadminpostman.services.AutoreService;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/blogAuthors")
@@ -45,11 +50,21 @@ public class AutoreController {
         if (validation.hasErrors())throw new BadRequest("Errore nella creazione di un nuovo autore");
         return this.autoreService.createAuthor(payloads);
     }
+
     //PUT - http://localhost:3027/blogAuthors+ payload
     @PutMapping("/{authorId}")
-    public Autore modifyAuthor(@RequestBody @Valid NewAutoreRecord payloads, @PathVariable UUID authorId, BindingResult validation){
-        if (validation.hasErrors())throw new BadRequest("Errore nella modifica del campo autore");
-        return this.autoreService.modifyAuthor(authorId, payloads);
+    public ResponseEntity<?> modifyAuthor(@RequestBody @Valid NewAutoreRecord payloads,
+                                          @PathVariable UUID authorId,
+                                          BindingResult validation) {
+
+        if (validation.hasErrors()) {
+            List<String> errorsList = validation.getFieldErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorsList);
+        }
+        var updatedAuthor = this.autoreService.modifyAuthor(authorId, payloads);
+        return ResponseEntity.ok(updatedAuthor);
     }
     //DELETE - http://localhost:3027/blogAuthors/{authorId}
     @DeleteMapping("/{authorId}")
