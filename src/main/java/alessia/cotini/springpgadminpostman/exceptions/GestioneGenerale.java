@@ -32,6 +32,6 @@ public class GestioneGenerale {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public GestioneErrore errGenerale(Exception ex){
         ex.printStackTrace();
-        return new GestioneErrore("SERVER ERROR", LocalDateTime.now());
+        return new GestioneErrore("Eccezione generale", LocalDateTime.now());
     }
 }

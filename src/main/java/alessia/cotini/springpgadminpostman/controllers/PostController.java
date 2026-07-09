@@ -6,6 +6,7 @@ import alessia.cotini.springpgadminpostman.exceptions.BadRequest;
 import alessia.cotini.springpgadminpostman.exceptions.Conflict;
 import alessia.cotini.springpgadminpostman.records.NewPostRecord;
 import alessia.cotini.springpgadminpostman.services.PostService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -43,13 +44,13 @@ public class PostController {
     //POST - http://localhost:3027/blogPost + payload
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPost(@Validated BindingResult validation, @RequestBody NewPostRecord payload){
+    public void createPost(@RequestBody @Valid NewPostRecord payload, BindingResult validation){
       if(validation.hasErrors()){throw new BadRequest("Errore nell'inserimento dei campi di creazione");}
        this.postService.save(payload);
     }
     //PUT - http://localhost:3027/blogPost/{postId} + payload
     @PutMapping("/{postId}")
-    public Post modifyPost(@Validated BindingResult validation, @RequestBody NewPostRecord payloads, @PathVariable UUID postId){
+    public Post modifyPost(@RequestBody @Valid NewPostRecord payloads, @PathVariable UUID postId, BindingResult validation){
         if(validation.hasErrors()){throw new BadRequest("Errore nella modifica dei campi inseriti");}
         return this.postService.modifyPost(postId, payloads);
     }

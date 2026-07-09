@@ -6,6 +6,7 @@ import alessia.cotini.springpgadminpostman.exceptions.BadRequest;
 import alessia.cotini.springpgadminpostman.exceptions.Conflict;
 import alessia.cotini.springpgadminpostman.records.NewAutoreRecord;
 import alessia.cotini.springpgadminpostman.services.AutoreService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -40,13 +41,13 @@ public class AutoreController {
     //POST - http://localhost:3027/blogAuthors + payload
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Autore createAuthor(@Validated BindingResult validation,@RequestBody NewAutoreRecord payloads){
+    public Autore createAuthor(@RequestBody @Valid NewAutoreRecord payloads, BindingResult validation){
         if (validation.hasErrors())throw new BadRequest("Errore nella creazione di un nuovo autore");
         return this.autoreService.createAuthor(payloads);
     }
     //PUT - http://localhost:3027/blogAuthors+ payload
     @PutMapping("/{authorId}")
-    public Autore modifyAuthor(@Validated BindingResult validation,@RequestBody NewAutoreRecord payloads, @PathVariable UUID authorId){
+    public Autore modifyAuthor(@RequestBody @Valid NewAutoreRecord payloads, @PathVariable UUID authorId, BindingResult validation){
         if (validation.hasErrors())throw new BadRequest("Errore nella modifica del campo autore");
         return this.autoreService.modifyAuthor(authorId, payloads);
     }
