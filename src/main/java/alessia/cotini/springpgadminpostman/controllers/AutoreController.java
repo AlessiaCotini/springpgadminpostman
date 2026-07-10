@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -53,15 +54,16 @@ public class AutoreController {
 
     //PUT - http://localhost:3027/blogAuthors+ payload
     @PutMapping("/{authorId}")
-    public ResponseEntity<?> modifyAuthor(@RequestBody @Valid NewAutoreRecord payloads,
-                                          @PathVariable UUID authorId,
+    public ResponseEntity<?> modifyAuthor( @PathVariable UUID authorId, @RequestBody @Validated NewAutoreRecord payloads,
+
                                           BindingResult validation) {
 
         if (validation.hasErrors()) {
             List<String> errorsList = validation.getFieldErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .toList();
-            return ResponseEntity.badRequest().body(errorsList);
+            throw new BadRequest("Controlla i campi inseriti");
+
         }
         var updatedAuthor = this.autoreService.modifyAuthor(authorId, payloads);
         return ResponseEntity.ok(updatedAuthor);

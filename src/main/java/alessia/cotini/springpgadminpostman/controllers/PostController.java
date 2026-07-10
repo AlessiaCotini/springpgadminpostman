@@ -4,6 +4,7 @@ package alessia.cotini.springpgadminpostman.controllers;
 import alessia.cotini.springpgadminpostman.entities.Post;
 import alessia.cotini.springpgadminpostman.exceptions.BadRequest;
 import alessia.cotini.springpgadminpostman.exceptions.Conflict;
+import alessia.cotini.springpgadminpostman.records.NewAutoreRecord;
 import alessia.cotini.springpgadminpostman.records.NewPostRecord;
 import alessia.cotini.springpgadminpostman.services.PostService;
 import jakarta.validation.Valid;
@@ -50,7 +51,9 @@ public class PostController {
     }
     //PUT - http://localhost:3027/blogPost/{postId} + payload
     @PutMapping("/{postId}")
-    public Post modifyPost(@RequestBody @Valid NewPostRecord payloads, @PathVariable UUID postId, BindingResult validation){
+    public Post modifyPost( @PathVariable UUID postId, @RequestBody @Validated NewPostRecord payloads,
+
+                            BindingResult validation){
         if(validation.hasErrors()){throw new BadRequest("Errore nella modifica dei campi inseriti");}
         return this.postService.modifyPost(postId, payloads);
     }
